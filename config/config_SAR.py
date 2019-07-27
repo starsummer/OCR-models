@@ -28,6 +28,7 @@ data_cfg  = {
     'target_H': 48, #resize到固定宽度
     'fix_width': False, #如果fix width，图片都会resize到max width
     'max_width': 160,
+    'is_aug': False,
     'nc': model_cfg['nc'],
     'batch_size': train_cfg['batch_size'],
     'test_batch_size': train_cfg['test_batch_size'],

@@ -14,7 +14,7 @@ import argparse
 import math
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--config_file', type=str, default='config/config_SAR.py')
+parser.add_argument('--config_file', type=str, default='config/config_CRNN.py')
 parser.add_argument('--gpu', type=str, default='0')
 opt = parser.parse_args()
 

@@ -149,6 +149,7 @@ class loader(object):
         self.num_workers = num_workers
         self.drop_last = drop_last
         self.aug = aug
+        self.is_aug = data_cfg['is_aug']
         self.fix_width = data_cfg['fix_width']
         self.transform_tensor=transforms.Compose([
             transforms.ToTensor(),
@@ -159,6 +160,27 @@ class loader(object):
  
 
     def aug_resize_transform(self, img):   
+
+        #进行增强  
+        if self.test==False and self.is_aug == True:
+            if random.randint(0,100)>50: #进行一定缩放，一是改变字符宽高比，二是模拟压缩失真
+                img_W, img_H = img.size
+                delta_width = random.uniform(0.8,1.2) #宽高随机为原来的0.8-1.2倍
+                W = math.ceil(delta_width*img_W)
+                delta_height = random.uniform(0.8,1.2)
+                H = math.ceil(delta_height*img_H)
+                img = img.resize((W,H), random.choice([Image.NEAREST,Image.BILINEAR,Image.BICUBIC,Image.LANCZOS])) #随机选择4种插值方式        
+
+            if random.randint(0,100)>75: #减少像素
+                img_W, img_H = img.size
+                random_h = random.randint(13,40)
+                new_W = int(img_W * random_h / img_H)
+                img = img.resize((new_W,random_h), Image.BICUBIC)      
+
+            img = np.asarray(img)
+            img = self.aug(image=img)['image']
+            img = Image.fromarray(img)
+
         #resize到固定高度
         img_W, img_H = img.size
         new_W = int(img_W * self.target_H / img_H)
